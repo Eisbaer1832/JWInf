@@ -31,8 +31,8 @@ def isSport(name):
 		return False
 
 
-def getData():
-	with open('data/ball07.txt') as f:
+def getData(file):
+	with open('data/' + file) as f:
 		lines = f.readlines()
 		del lines[0] # Erste Zeile mit dem Jahrgang, ig das bringt erstmal nix
 
