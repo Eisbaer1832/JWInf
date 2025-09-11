@@ -39,7 +39,7 @@ class Window(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("PyQtGraph")
+        self.setWindowTitle("Bällebad")
         self.setGeometry(100, 100, 600, 500)
         self.UiComponents()
         self.show()

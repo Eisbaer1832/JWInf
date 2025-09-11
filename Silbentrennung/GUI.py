@@ -10,6 +10,7 @@ from PyQt6.QtWidgets import QLabel
 from PyQt6.QtWidgets import *
 import argparse
 import sys
+import Silbentrennung as s
 
 files = os.listdir("./data")
 x = list()
@@ -21,32 +22,46 @@ def loadSampleText(file):
         return lines
 
 
-
 class Window(QMainWindow):
     def FileClicked(self,item):
         self.text_edit.setText(loadSampleText(item.text()))
 
+    def seperateSillables(self):
+        sepText = s.doSeperation(self.text_edit.toPlainText()) # Das called den tatsächlichen Algorithmus
+        self.text_edit.setText(sepText)
+
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("PyQtGraph")
+        self.setWindowTitle("Silbentrennung")
         self.setGeometry(100, 100, 600, 500)
         self.UiComponents()
         self.show()
 
+
     def UiComponents(self):
         widget = QWidget()
+
+        # Beispiel Daten Widget
         listWidget = QListWidget()
         listWidget.setMaximumWidth(200)
         listWidget.itemClicked.connect(self.FileClicked)
         for i in range(len(files)):
             listWidget.addItem(files[i])
 
+        # Text Editor
         self.text_edit = QTextEdit(self)
+
+        # N Knopf halt, wat willste dazu sagen
+        doSeperationBtn = QPushButton(text="Silben trennen", parent = self)
+        doSeperationBtn.clicked.connect(self.seperateSillables)
         
+        # Also Jannes ich hoffe du ließt diesen Kommentar und kriegst n Lachflash 🤓
         layout = QGridLayout()
         widget.setLayout(layout)
         layout.addWidget(listWidget)
-        layout.addWidget(self.text_edit, 0, 1, 3, 1)
+        layout.addWidget(self.text_edit, 0, 1, 1, 1)
+        layout.addWidget(doSeperationBtn, 1, 1, 1, 1)
+
         self.setCentralWidget(widget)
 
 
