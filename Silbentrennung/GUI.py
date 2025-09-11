@@ -1,9 +1,6 @@
-import pyqtgraph as pg
 import numpy as np
 import os
 import sys
-from pyqtgraph.Qt import QtCore, QtGui
-import pyqtgraph as pg
 import numpy as np
 from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QLabel
