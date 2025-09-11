@@ -9,7 +9,25 @@ def isFirstOrLastChar(char):
         return True
     else:
         return False
-    
+
+def cantSeperate(char1, char2):
+    if (char1 == "c"  and char2 == "h"):
+        return True
+    elif (char1 == "e"  and char2 == "u"):
+        return True
+    elif (char1 == "m"  and char2 == "m"):
+        return True
+    elif (char1 == "l"  and char2 == "l"):
+        return True
+    elif (char1 == "e" and char2 == "i"):
+        return True
+    elif (char1 == "a" and char2 == "u"):
+        return True
+    elif (char1 == "c" and char2 == "k"):
+        return True
+
+    else:
+        return False
     
 def checkForSillable(char0, char1, char2, char3):
     state = False
@@ -23,7 +41,7 @@ def checkForSillable(char0, char1, char2, char3):
     # h ist nach einem Voakl Stumm und wird dann nicht getrennt ig?
     if (isConsonant(char1) == False and char2 == "h"):
         state = False
-        
+
     # 3 Konsonanten
     if (isConsonant(char1) and isConsonant(char2) and isConsonant(char3)):
         skipNext = True # nur der Erste darf ne " " kriegen
@@ -42,7 +60,7 @@ def checkForSillable(char0, char1, char2, char3):
     # hier muss iwi nach dem 2. getrennt werden, da müssen wir uns nochmal angucken
 
     # ch darf man glaub ich nicht trennen hoffe ich
-    if (char1 == "c"  and char2 == "h" or char2 == "c" and char3 == "h" or char1 == "e"  and char2 == "u" or char1 == "m"  and char2 == "m" or char1 == "l"  and char2 == "l"):
+    if (cantSeperate(char1, char2)):
         state = False
     
     # Letztes Zeichen des Worts
