@@ -14,7 +14,7 @@ x = list()
 y = list()
 
 def loadSampleText(file):
-    with open('data/' + file) as f:
+    with open('data/tasks/' + file) as f:
         lines = f.read()
         return lines
 
@@ -24,7 +24,7 @@ class Window(QMainWindow):
         self.text_edit.setText(loadSampleText(item.text()))
 
     def seperateSillables(self):
-        sepText = s.doSeperation(self.text_edit.toPlainText()) # Das called den tatsächlichen Algorithmus
+        sepText = s.doSeperation(self.text_edit.toPlainText(), True) # Das called den tatsächlichen Algorithmus
         self.text_edit.setText(sepText)
 
     def __init__(self):
