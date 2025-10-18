@@ -25,14 +25,22 @@ def load(fetch_type:Type, file):
 
 
 def main():
+    total = 0
+    failed = 0
+
     for file in files:
+        total = total + 1
         task = load(Type.Task, file)
-        seperated = S.doSeperation(task, False)
+        seperated = S.doSeperation(task)
         solution = " " + load(Type.Solution, file)
         if seperated == solution:
-            logger.success(seperated)
+            logger.success(seperated.replace("\n", ""))
         else:
-            logger.critical(seperated)
+            logger.error(seperated.replace("\n", ""))
+            failed = failed + 1
+
+    logger.info(str(failed) + "/" + str(total) + " Tests fehlgeschlagen.")
+    logger.info("Erfolgsquote: " + str(round((((total - failed) / total)*100),2)) + "%")
 
 if __name__ == "__main__":
     main()
