@@ -124,7 +124,7 @@ def checkForSillable(c):
 def doSeperation(text):
     # ne for loop geht hier nicht, weil er dann unendlich lange immer n " " hinzufügt 😭
     i = 1
-    text = " " + text
+    text = " " + text   
     while i < len(text) - 2:
         (state,skipNext) = checkForSillable(text[i-1] + text[i] + text[i + 1] + text[i + 2])
         if state: 
