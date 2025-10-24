@@ -96,12 +96,6 @@ def check_for_sillable(c):
         elif not isConsonant(c[4]):
             state = True
 
-    # "lisch"-Fix -> "-lische"-Trennung / "-lisch"-keine Trennung
-    if c[2] == "s" and c[3] == "c" and c[4] == "h":
-        if not isConsonant(c[1]) and isFirstOrLastChar(c[5]):
-            state = False
-        elif not isConsonant(c[5]):
-            state = True
 
     # 2 Konsonanten
     if isConsonant(c[1]) and isConsonant(c[2]):
@@ -129,6 +123,15 @@ def check_for_sillable(c):
     # Der Sauerkraut Fix: 3 Vokale
     if isConsonant(c[1]) == False and isConsonant(c[2]) == False and isConsonant(c[3]) == False:
         state = True
+
+
+    # "lisch"-Fix -> "-lische"-Trennung / "-lisch"-keine Trennung
+    if c[2] == "s" and c[3] == "c" and c[4] == "h":
+        if  isFirstOrLastChar(c[5]):
+            state = False
+        elif not isConsonant(c[1]) and not isConsonant(c[5]):
+            state = True
+
 
     if isFirstOrLastChar(c[0]) and isConsonant(c[1]) or isFirstOrLastChar(c[3]):
         state = False
