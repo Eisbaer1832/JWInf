@@ -75,8 +75,13 @@ def check_for_sillable(c):
     if "sch" in c:
         state = False
 
+    if c[0] == "c" and c[1] == "h" and isConsonant(c[2]):
+        state = False
 
     if cant_seperate(c):
+        state = False
+
+    if c[1] == c[2] and c[3] == "h":
         state = False
 
     return state, skip_next
