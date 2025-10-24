@@ -18,7 +18,7 @@ def load(fetch_type:Type, file):
             return f.read()
     else:
         with open('data/solutions/' + file) as f:
-            return f.read()
+            return f.read() + " "
 
 
 

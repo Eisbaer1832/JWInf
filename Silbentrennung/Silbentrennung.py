@@ -14,16 +14,18 @@ def check_for_comp(compound):
     result = compound
 
     schIndex = pass_compound.rfind("sch")
-    if schIndex >= 1:
-        schIndex = schIndex + 3
-        if isConsonant(pass_compound[schIndex]):
-            pass_compound =  pass_compound[0:schIndex] + " " + pass_compound[schIndex: len(pass_compound)]
-            result = " " + pass_compound
+    try:
+        if schIndex >= 1:
+            schIndex = schIndex + 3
+            if isConsonant(pass_compound[schIndex]):
+                pass_compound =  pass_compound[0:schIndex] + " " + pass_compound[schIndex: len(pass_compound)]
+                result = " " + pass_compound
+    except:
+        pass
 
     # check for prefix
     prefix = ["be", "ent", "ver"]
     for e in prefix:
-        print(pass_compound + " " + e)
         if pass_compound.startswith(e):
             pass_compound = " " + pass_compound[0:len(e)] + " " + pass_compound[len(e):len(pass_compound)]
             print(pass_compound)
@@ -175,7 +177,7 @@ def check_for_sillable(c):
 
 def doSeperation(text):
     i = 1
-    text = " " + text
+    text = " " + text + " "
 
     word_start_i = 0
     for j in range(len(text)):
