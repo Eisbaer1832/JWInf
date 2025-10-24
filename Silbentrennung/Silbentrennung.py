@@ -28,7 +28,6 @@ def check_for_comp(compound):
     for e in prefix:
         if pass_compound.startswith(e):
             pass_compound = " " + pass_compound[0:len(e)] + " " + pass_compound[len(e):len(pass_compound)]
-            print(pass_compound)
             result = pass_compound
 
     try:
@@ -81,6 +80,8 @@ def cant_seperate(c):
         return True
     elif c[1] == "h" and c[2] == "r":
         return True
+    elif c[1] == "s" and c[2] == "c" and c[3] == "h":
+        return True
     else:
         return False
 
@@ -101,7 +102,6 @@ def check_for_sillable(c):
             state = False
         elif not isConsonant(c[5]):
             state = True
-
 
     # 2 Konsonanten
     if isConsonant(c[1]) and isConsonant(c[2]):
@@ -130,9 +130,6 @@ def check_for_sillable(c):
     if isConsonant(c[1]) == False and isConsonant(c[2]) == False and isConsonant(c[3]) == False:
         state = True
 
-    if not isConsonant(c[0]) and c[1] == "c" and c[2] == "h" and isConsonant(c[3]):
-        skip_next = True
-
     if isFirstOrLastChar(c[0]) and isConsonant(c[1]) or isFirstOrLastChar(c[3]):
         state = False
 
@@ -156,8 +153,8 @@ def check_for_sillable(c):
     if c[1] == " ":
         state = False
 
-    #"sch" und anschließender Konsonant werden getrennt
-    if "sch" in c:
+    #"sch" und voranstehender Konsonant werden nicht getrennt
+    if isConsonant(c[1]) and cant_seperate(c):
         state = False
 
     if c[0] == "c" and c[1] == "h" and isConsonant(c[2]):
