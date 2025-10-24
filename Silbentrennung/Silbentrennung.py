@@ -75,7 +75,7 @@ def check_for_sillable(c):
         state = False
 
     #"sch" und anschließender Konsonant werden getrennt
-    if c[0] == "s" and c[1] == "c" and c[2] == "h" and isConsonant(c[3]):
+    if c[1] == "s" and c[2] == "c" and c[3] == "h" and isConsonant(c[4]):
         state = False
 
     if cant_seperate(c):
@@ -88,8 +88,8 @@ def check_for_sillable(c):
 def doSeperation(text):
     i = 1
     text = " " + text
-    while i < len(text) - 2:
-        (state,skipNext) = check_for_sillable(text[i - 1] + text[i] + text[i + 1] + text[i + 2])
+    while i < len(text) - 3:
+        (state,skipNext) = check_for_sillable(text[i - 1] + text[i] + text[i + 1] + text[i + 2] + text[i + 3])
         if state: 
             text = text[:i+1] + " " + text[i+1:] # Silbentrennugn einfügen
             if (skipNext): i = i + 1
