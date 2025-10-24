@@ -1,3 +1,15 @@
+from german_compound_splitter import comp_split
+
+
+def check_for_comp(compound):
+    input_file = '/dicts/german.dic'
+    ahocs = comp_split.read_dictionary_from_file(input_file)
+
+    dissection = comp_split.dissect(compound, ahocs, make_singular=True)
+    print('SPLIT WORDS (plain):', dissection)
+    print('SPLIT WORDS (post-merge):', comp_split.merge_fractions(dissection))
+
+
 def isConsonant(char):
     if char.lower() in "aeiouäöüy!.,;- ":
         return False
@@ -91,10 +103,13 @@ def check_for_sillable(c):
 def doSeperation(text):
     i = 1
     text = " " + text
+    word_start_i = 0
     while i < len(text) - 3:
+        if(text[i] in " ?.,:!"):
+            print(text[word_start_i: i])
         (state,skipNext) = check_for_sillable(text[i - 1] + text[i] + text[i + 1] + text[i + 2] + text[i + 3])
         if state: 
-            text = text[:i+1] + " " + text[i+1:] # Silbentrennugn einfügen
+            text = text[:i+1] + " " + text[i+1:] # Silbentrennung einfügen
             if (skipNext): i = i + 1
             i = i + 2
         else:
