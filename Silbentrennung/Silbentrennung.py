@@ -5,16 +5,24 @@ from trimesh.bounds import contains
 
 dict = comp_split.read_dictionary_from_file( './dicts/german.dic')
 
+def is_präfix(c):
+    if isFirstOrLastChar(c[0]) and "be" in c:
+        return True
+    else:
+        return False
 
 def check_for_comp(compound):
     try:
-        dissection = comp_split.dissect(compound, dict)
+        pass_compound = compound.strip(",").strip()
+        dissection = comp_split.dissect(pass_compound, dict)
         result = compound
         if len(dissection) > 1:
+            #logger.info(dissection)
             for i in range(len(dissection) - 1):
                 index = result.lower().rfind(dissection[i + 1].lower())
                 result = result[0:index] + " " + result[index:len(result)]
                 index += 1
+            #logger.debug(result)
         return result
     except:
         return compound
@@ -22,7 +30,7 @@ def check_for_comp(compound):
 
 
 def isConsonant(char):
-    if char.lower() in "aeiouäöüy!.,;- ":
+    if char.lower() in "aeiouäöü!.,;- ":
         return False
     else:
         return True
@@ -56,6 +64,21 @@ def check_for_sillable(c):
     state = False
     skip_next = False
 
+    # "lich"-Fix -> "-liche"-Trennung / "-lich"-keine Trennung
+    if c[2] == "c" and c[3] == "h":
+        if not isConsonant(c[1]) and isFirstOrLastChar(c[4]):
+            state = False
+        elif not isConsonant(c[4]):
+            state = True
+
+    # "lisch"-Fix -> "-lische"-Trennung / "-lisch"-keine Trennung
+    if c[2] == "s" and c[3] == "c" and c[4] == "h":
+        if not isConsonant(c[1]) and isFirstOrLastChar(c[5]):
+            state = False
+        elif not isConsonant(c[5]):
+            state = True
+
+
     # 2 Konsonanten
     if isConsonant(c[1]) and isConsonant(c[2]):
         state = True
@@ -83,6 +106,10 @@ def check_for_sillable(c):
     if not isConsonant(c[1]) and not isConsonant(c[2]):
         state = True
 
+
+    if c[1] == "r" and c[2] == "n" and isConsonant(c[3]):
+        state = False
+
     # h ist nach einem Vokal stumm und wird dann nicht getrennt ig?
     if isConsonant(c[1]) == False and c[2] == "h":
         state = False
@@ -105,8 +132,8 @@ def check_for_sillable(c):
     if cant_seperate(c):
         state = False
 
-    if c[1] == c[2] and c[3] == "h":
-        state = False
+    if is_präfix(c):
+        state = True
 
     return state, skip_next
 
@@ -121,9 +148,9 @@ def doSeperation(text):
             if not word in " ?.,:!" or "":
                 text = text.replace(word, check_for_comp(word))
                 word_start_i = j
-    print(text)
-    while i < len(text) - 3:
-        (state,skipNext) = check_for_sillable(text[i - 1] + text[i] + text[i + 1] + text[i + 2] + text[i + 3])
+
+    while i < len(text) - 4:
+        (state,skipNext) = check_for_sillable(text[i - 1] + text[i] + text[i + 1] + text[i + 2] + text[i + 3]+ text[i + 4])
         if state: 
             text = text[:i+1] + " " + text[i+1:] # Silbentrennung einfügen
             if (skipNext): i = i + 1
