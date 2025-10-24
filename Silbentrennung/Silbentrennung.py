@@ -33,6 +33,15 @@ def check_for_comp(compound):
     except:
         pass
 
+    lichIndex = pass_compound.rfind("lich")
+    try:
+        if lichIndex >= 1:
+            lichIndex = lichIndex
+            pass_compound = pass_compound[0:lichIndex] + " " + pass_compound[lichIndex: len(pass_compound)]
+            result = " " + pass_compound
+    except:
+        pass
+
     # check for prefix
     prefix = ["be", "ent", "ver"]
     for e in prefix:
@@ -170,7 +179,6 @@ def check_for_sillable(c):
 
     if c[0] == "c" and c[1] == "h" and isConsonant(c[2]):
         state = False
-
 
     if cant_seperate(c):
         state = False
