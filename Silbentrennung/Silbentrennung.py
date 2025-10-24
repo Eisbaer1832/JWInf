@@ -11,12 +11,10 @@ def check_for_comp(compound):
         dissection = comp_split.dissect(compound, dict)
         result = compound
         if len(dissection) > 1:
-            print(dissection)
             for i in range(len(dissection) - 1):
                 index = result.lower().rfind(dissection[i + 1].lower())
-                result = result[0:index] + "|" + result[index:len(result)]
+                result = result[0:index] + " " + result[index:len(result)]
                 index += 1
-            logger.info(result)
         return result
     except:
         return compound
@@ -121,9 +119,9 @@ def doSeperation(text):
         if text[j] in " ?.,:!":
             word = text[word_start_i: j]
             if not word in " ?.,:!" or "":
-                text.replace(word, check_for_comp(word.strip(" ")))
-            word_start_i = j
-
+                text = text.replace(word, check_for_comp(word))
+                word_start_i = j
+    print(text)
     while i < len(text) - 3:
         (state,skipNext) = check_for_sillable(text[i - 1] + text[i] + text[i + 1] + text[i + 2] + text[i + 3])
         if state: 
