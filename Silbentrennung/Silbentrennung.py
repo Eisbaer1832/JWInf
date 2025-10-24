@@ -18,7 +18,17 @@ def check_for_comp(compound):
         if schIndex >= 1:
             schIndex = schIndex + 3
             if isConsonant(pass_compound[schIndex]):
-                pass_compound =  pass_compound[0:schIndex] + " " + pass_compound[schIndex: len(pass_compound)]
+                pass_compound = pass_compound[0:schIndex] + " " + pass_compound[schIndex: len(pass_compound)]
+                result = " " + pass_compound
+    except:
+        pass
+
+    chIndex = pass_compound.rfind("ch")
+    try:
+        if chIndex >= 1:
+            chIndex = chIndex + 2
+            if not isConsonant(pass_compound[chIndex - 3]) and isConsonant(pass_compound[chIndex]) and not isFirstOrLastChar(pass_compound[chIndex + 1]):
+                pass_compound = pass_compound[0:chIndex] + " " + pass_compound[chIndex: len(pass_compound)]
                 result = " " + pass_compound
     except:
         pass
@@ -89,24 +99,23 @@ def check_for_sillable(c):
     state = False
     skip_next = False
 
-    # "lich"-Fix -> "-liche"-Trennung / "-lich"-keine Trennung
-    if c[2] == "c" and c[3] == "h":
-        if not isConsonant(c[1]) and isFirstOrLastChar(c[4]):
-            state = False
-        elif not isConsonant(c[4]):
-            state = True
-
-
-    # 2 Konsonanten
-    if isConsonant(c[1]) and isConsonant(c[2]):
-        state = True
-
     # 3 Konsonanten
     if isConsonant(c[1]) and isConsonant(c[2]) and isConsonant(c[3]) and not cant_seperate(c):
         if c[2] == c[3]:
             state = False
         else:
             skip_next = True
+            state = True
+
+    # 2 Konsonanten
+    if isConsonant(c[1]) and isConsonant(c[2]):
+        state = True
+
+    # "lich"-Fix -> "-liche"-Trennung / "-lich"-keine Trennung
+    if c[2] == "c" and c[3] == "h":
+        if not isConsonant(c[1]) and isFirstOrLastChar(c[4]):
+            state = False
+        elif not isConsonant(c[4]):
             state = True
 
     if c[1] == c[2]:
@@ -123,7 +132,6 @@ def check_for_sillable(c):
     # Der Sauerkraut Fix: 3 Vokale
     if isConsonant(c[1]) == False and isConsonant(c[2]) == False and isConsonant(c[3]) == False:
         state = True
-
 
     # "lisch"-Fix -> "-lische"-Trennung / "-lisch"-keine Trennung
     if c[2] == "s" and c[3] == "c" and c[4] == "h":
