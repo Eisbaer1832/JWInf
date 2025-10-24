@@ -1,6 +1,3 @@
-from loguru import logger
-
-
 def isConsonant(char):
     if char.lower() in "aeiouäöüy!.,;- ":
         return False
@@ -75,8 +72,9 @@ def check_for_sillable(c):
         state = False
 
     #"sch" und anschließender Konsonant werden getrennt
-    if c[1] == "s" and c[2] == "c" and c[3] == "h" and isConsonant(c[4]):
+    if "sch" in c:
         state = False
+
 
     if cant_seperate(c):
         state = False
