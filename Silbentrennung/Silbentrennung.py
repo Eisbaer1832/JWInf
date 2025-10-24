@@ -163,6 +163,7 @@ def check_for_sillable(c):
     if c[0] == "c" and c[1] == "h" and isConsonant(c[2]):
         state = False
 
+
     if cant_seperate(c):
         state = False
 
@@ -172,18 +173,23 @@ def check_for_sillable(c):
     if c[1] == "y" and c[2] == "t" and c[3] == "e":
         state = False
 
+    if c[0] == "h" and c[1] == "r" and  not isConsonant(c[2]):
+        state = False
+
+    if c[0] == "g" and c[1] == "e" and c[2] == "t":
+        state = True
 
     return state, skip_next
 
 def doSeperation(text):
     i = 1
-    text = " " + text + " "
+    text = " " + text
 
     word_start_i = 0
     for j in range(len(text)):
         if text[j] in " ?.,:!" or text[j] == "":
             word = text[word_start_i: j]
-            if not word in " ?.,:!" or "":
+            if not word in " ?.,:!":
                 text = text.replace(word, check_for_comp(word))
                 word_start_i = j
 
@@ -196,5 +202,5 @@ def doSeperation(text):
             i = i + 2
         else:
             i = i + 1
-    return text
+    return text + " "
 
