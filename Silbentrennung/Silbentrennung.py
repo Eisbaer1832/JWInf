@@ -104,7 +104,6 @@ def check_for_sillable(c):
         if c[2] == c[3]:
             state = False
         else:
-            skip_next = True
             state = True
 
     # 2 Konsonanten
@@ -123,7 +122,8 @@ def check_for_sillable(c):
             state = False
         elif isConsonant(c[3]) and isFirstOrLastChar(c[4]):
             state = False
-        skip_next = True
+        else:
+            state = True
 
     # 1 Vokal und keine 2 Konsonanten
     if isConsonant(c[1]) == False and ((isConsonant(c[2]) == False and isConsonant(c[3])) or (isConsonant(c[2]) and isConsonant(c[3]) == False)):
@@ -181,11 +181,10 @@ def check_for_sillable(c):
     if c[1] == "y" and c[2] == "t" and c[3] == "e":
         state = False
 
-    if c[0] == "h" and c[1] == "r" and  not isConsonant(c[2]):
-        state = False
-
     if c[0] == "g" and c[1] == "e" and c[2] == "t":
         state = True
+
+
 
     return state, skip_next
 
