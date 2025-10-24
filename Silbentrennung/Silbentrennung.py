@@ -14,6 +14,7 @@ def isFirstOrLastChar(char):
         return False
 
 def cant_seperate(c):
+    c = c.lower()
     if c[1] == "c"  and c[2] == "h":
         return True
     elif c[1] == "e"  and c[2] == "u":
@@ -25,6 +26,8 @@ def cant_seperate(c):
     elif c[1] == "a" and c[2] == "u":
         return True
     elif c[1] == "c" and c[2] == "k":
+        return True
+    elif c[1] == "a" and c[2] == "i":
         return True
     else:
         return False
@@ -41,8 +44,11 @@ def check_for_sillable(c):
 
     # 3 Konsonanten
     if isConsonant(c[1]) and isConsonant(c[2]) and isConsonant(c[3]):
-        skip_next = True # nur der Erste darf ne " " kriegen
-        state = True
+        if c[2] == c[3]:
+            state = False
+        else:
+            skip_next = True
+            state = True
 
     # 1 Vokal und keine 2 Konsonanten
     if isConsonant(c[1]) == False and ((isConsonant(c[2]) == False and isConsonant(c[3])) or (isConsonant(c[2]) and isConsonant(c[3]) == False)):
@@ -50,10 +56,10 @@ def check_for_sillable(c):
 
 
     # Der Sauerkraut Fix: 3 Vokale
-    if (isConsonant(c[1]) == False and isConsonant(c[2]) == False and isConsonant(c[3]) == False):
+    if isConsonant(c[1]) == False and isConsonant(c[2]) == False and isConsonant(c[3]) == False:
         state = True
 
-    if isFirstOrLastChar(c[0]) or isFirstOrLastChar(c[3]):
+    if isFirstOrLastChar(c[0]) and isConsonant(c[1]) or isFirstOrLastChar(c[3]):
         state = False
 
     # h ist nach einem Voakl Stumm und wird dann nicht getrennt ig?
