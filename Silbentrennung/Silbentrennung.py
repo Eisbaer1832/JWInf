@@ -2,20 +2,36 @@ from SCons.Tool.MSCommon.vc import component_id
 from german_compound_splitter import comp_split
 from loguru import logger
 from trimesh.bounds import contains
+import pandas as pd
 
 dict = comp_split.read_dictionary_from_file( './dicts/german.dic')
+german = pd.read_csv("./dicts/german.dic", header=None, names=["word"], encoding="utf-8")
+english = pd.read_csv("./dicts/english.dic", header=None, names=["word"], encoding="utf-8")
 
-def is_präfix(c):
-    if isFirstOrLastChar(c[0]) and "be" in c:
-        return True
-    else:
-        return False
 
 def check_for_comp(compound):
+    pass_compound = compound.strip(",").strip()
+    result = compound
+
+    schIndex = pass_compound.rfind("sch")
+    if schIndex >= 1:
+        schIndex = schIndex + 3
+        if isConsonant(pass_compound[schIndex]):
+            pass_compound =  pass_compound[0:schIndex] + " " + pass_compound[schIndex: len(pass_compound)]
+            result = " " + pass_compound
+
+    # check for prefix
+    prefix = ["be", "ent", "ver"]
+    for e in prefix:
+        print(pass_compound + " " + e)
+        if pass_compound.startswith(e):
+            pass_compound = " " + pass_compound[0:len(e)] + " " + pass_compound[len(e):len(pass_compound)]
+            print(pass_compound)
+            result = pass_compound
+
     try:
-        pass_compound = compound.strip(",").strip()
         dissection = comp_split.dissect(pass_compound, dict)
-        result = compound
+
         if len(dissection) > 1:
             #logger.info(dissection)
             for i in range(len(dissection) - 1):
@@ -27,10 +43,12 @@ def check_for_comp(compound):
     except:
         return compound
 
-
+def is_english(word):
+    return
+    #print("german[word]")
 
 def isConsonant(char):
-    if char.lower() in "aeiouäöü!.,;- ":
+    if char.lower() in "aeiouäöüy!.,;- ":
         return False
     else:
         return True
@@ -56,6 +74,10 @@ def cant_seperate(c):
     elif c[1] == "c" and c[2] == "k":
         return True
     elif c[1] == "a" and c[2] == "i":
+        return True
+    elif c[1] == "i" and c[2] == "e":
+        return True
+    elif c[1] == "h" and c[2] == "r":
         return True
     else:
         return False
@@ -84,12 +106,19 @@ def check_for_sillable(c):
         state = True
 
     # 3 Konsonanten
-    if isConsonant(c[1]) and isConsonant(c[2]) and isConsonant(c[3]):
+    if isConsonant(c[1]) and isConsonant(c[2]) and isConsonant(c[3]) and not cant_seperate(c):
         if c[2] == c[3]:
             state = False
         else:
             skip_next = True
             state = True
+
+    if c[1] == c[2]:
+        if c[3] == "h":
+            state = False
+        elif isConsonant(c[3]) and isFirstOrLastChar(c[4]):
+            state = False
+        skip_next = True
 
     # 1 Vokal und keine 2 Konsonanten
     if isConsonant(c[1]) == False and ((isConsonant(c[2]) == False and isConsonant(c[3])) or (isConsonant(c[2]) and isConsonant(c[3]) == False)):
@@ -98,6 +127,9 @@ def check_for_sillable(c):
     # Der Sauerkraut Fix: 3 Vokale
     if isConsonant(c[1]) == False and isConsonant(c[2]) == False and isConsonant(c[3]) == False:
         state = True
+
+    if not isConsonant(c[0]) and c[1] == "c" and c[2] == "h" and isConsonant(c[3]):
+        skip_next = True
 
     if isFirstOrLastChar(c[0]) and isConsonant(c[1]) or isFirstOrLastChar(c[3]):
         state = False
@@ -132,8 +164,12 @@ def check_for_sillable(c):
     if cant_seperate(c):
         state = False
 
-    if is_präfix(c):
-        state = True
+    is_english(c)
+
+
+    if c[1] == "y" and c[2] == "t" and c[3] == "e":
+        state = False
+
 
     return state, skip_next
 
@@ -143,7 +179,7 @@ def doSeperation(text):
 
     word_start_i = 0
     for j in range(len(text)):
-        if text[j] in " ?.,:!":
+        if text[j] in " ?.,:!" or text[j] == "":
             word = text[word_start_i: j]
             if not word in " ?.,:!" or "":
                 text = text.replace(word, check_for_comp(word))
@@ -153,7 +189,8 @@ def doSeperation(text):
         (state,skipNext) = check_for_sillable(text[i - 1] + text[i] + text[i + 1] + text[i + 2] + text[i + 3]+ text[i + 4])
         if state: 
             text = text[:i+1] + " " + text[i+1:] # Silbentrennung einfügen
-            if (skipNext): i = i + 1
+            if (skipNext):
+                i = i + 1
             i = i + 2
         else:
             i = i + 1
