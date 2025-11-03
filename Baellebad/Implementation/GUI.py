@@ -3,7 +3,7 @@ import numpy as np
 import os
 import sys
 from pyqtgraph.Qt import QtCore, QtGui
-import Bällebad  as b
+import Baellebad  as b
 import pyqtgraph as pg
 import numpy as np
 from PyQt6 import QtWidgets
@@ -13,27 +13,29 @@ from PyQt6.QtWidgets import *
 import argparse
 import sys
 
-files = os.listdir("./data")
+files = os.listdir("data")
 x = list()
 y = list()
 
 
 def getData(file):
-    data = b.getData(file)
-    x = list(data.keys())
-    y = list(data.values())
-    return(x,y )
+    maxValue, maxHour, timeStamps = b.getData(file)
+    x_labels = list(timeStamps.keys())
+    x = list(range(len(x_labels)))
+    y = list(timeStamps.values())
+    return maxValue, maxHour, x_labels, x,y
 
-x,y = getData("ball00.txt")
+maxValue, maxHour, x_labels, x,y = getData("ball00.txt")
 
 
 
 
 class Window(QMainWindow):
     def FileClicked(self,item):
-        x,y = getData(item.text())
+        maxValue, maxHour,x_labels, x, y = getData(item.text())
         self.bargraph.setOpts(x = x, height = y)
-
+        self.resultText.setText("Die Schule braucht höchstens " + str(maxValue) + " Bälle um " + str(maxHour) + " Uhr!")
+        self.plot.getAxis('bottom').setTicks([list(zip(x, x_labels))])
         self.plot.removeItem(self.bargraph)
         self.plot.addItem(self.bargraph)
 
@@ -51,7 +53,8 @@ class Window(QMainWindow):
         listWidget.itemClicked.connect(self.FileClicked)
         for i in range(len(files)):
             listWidget.addItem(files[i])
-        
+
+        self.resultText = QLabel()
 
         self.plot = pg.plot()
 
@@ -59,8 +62,9 @@ class Window(QMainWindow):
         self.plot.addItem(self.bargraph)
         layout = QGridLayout()
         widget.setLayout(layout)
-        layout.addWidget(listWidget)
-        layout.addWidget(self.plot, 0, 1, 3, 1)
+        layout.addWidget(listWidget, 0, 0)
+        layout.addWidget(self.plot, 0, 1)
+        layout.addWidget(self.resultText, 1, 1)
         self.setCentralWidget(widget)
 
 

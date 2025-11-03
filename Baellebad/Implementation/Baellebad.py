@@ -4,7 +4,7 @@ import operator
 class Unterricht:
 	def __init__(self, Class, Day, Start, End, BallsNeeded):
 		self.Class = Class
-		self.Day = Day	
+		self.Day = Day
 		self.Start = int(Start)
 		self.End = int(End)
 		self.BallsNeeded = int(BallsNeeded)
@@ -19,7 +19,7 @@ def getHours(start, end):
 	hours = []
 	while c <= end:
 		hours.append(c)
-		c = c + 1 
+		c = c + 1
 	return hours
 
 def isSport(name):
@@ -34,25 +34,42 @@ def isSport(name):
 def getData(file):
 	with open('data/' + file) as f:
 		lines = f.readlines()
-		del lines[0] # Erste Zeile mit dem Jahrgang, ig das bringt erstmal nix
+		del lines[0] # die erste Zeile ist nicht relevant für diesen Zweck
 
 		classes = []
-		timeStamps = {}
 
-		# Einlesen der Daten in die Klasse, ich hab ja gaarkeinen Bock mit indices zu arbeiten
+		days = {"Montag": {}, "Dienstag" : {}, "Mittwoch": {}, "Donnerstag" : {},  "Freitag" : {}} # dictionary of Weekdays, with their corresponding Timestamps
+
+
 		for line in lines:
 			tempClass = line.split(" ")
 			classes.append(Unterricht(tempClass[0],tempClass[1],tempClass[2],tempClass[3],tempClass[4].rstrip()))
 
 		for item in classes:
 			hours = getHours(item.Start, item.End)
+			day_time_stamps = days[item.Day]
 			for hour in hours:
 				if isSport(item.Class):
-					lastVal = timeStamps.get(hour)
-					if lastVal == None: lastVal = 0
-					timeStamps[hour] = lastVal + item.BallsNeeded
-		print("Gesamtzahlen: " + str(timeStamps))
-		maxValue = max(timeStamps.values())
-		maxHour = max(timeStamps, key=timeStamps.get)
-		print("Die Schule braucht höchstens " + str(maxValue) + " Bälle um " + str(maxHour) + " Uhr!")
-		return timeStamps
+					lastVal = day_time_stamps.get(hour)
+					if lastVal is None: lastVal = 0
+					day_time_stamps[hour] = lastVal + item.BallsNeeded
+			days[item.Day] = day_time_stamps
+
+		maxBalls = 0
+		maxHour = 0
+		graphDict = {}
+		# calculate maximum usage
+		for day in days.values():
+			if len(day.values()) > 0:
+				print(day.values())
+				maxValue = max(day.values())
+				print(maxValue)
+				if maxValue > maxBalls:
+					maxBalls = maxValue
+					maxHour = max(day, key=day.get)
+
+		for day, hours in days.items():
+			for hour, value in hours.items():
+				graphDict[f"{day[0] + day[1]} {hour}"] = value
+		print(graphDict)
+		return maxValue, maxHour, graphDict

@@ -9,7 +9,8 @@ german = pd.read_csv("./dicts/german.dic", header=None, names=["word"], encoding
 english = pd.read_csv("./dicts/english.dic", header=None, names=["word"], encoding="utf-8")
 
 
-def check_for_comp(compound):
+# Folgende Methode trennt alle Wortbestandteile, die zwanghaft immer getrennt werden müssen
+def force_seperate(compound):
     pass_compound = compound.strip(",").strip()
     result = compound
 
@@ -63,10 +64,6 @@ def check_for_comp(compound):
     except:
         return compound
 
-def is_english(word):
-    return
-    #print("german[word]")
-
 def isConsonant(char):
     if char.lower() in "aeiouäöüy!.,;- ":
         return False
@@ -104,6 +101,8 @@ def cant_seperate(c):
     else:
         return False
 
+
+# Diese Methode trennt basierend auf einem hierarchischem System
 def check_for_sillable(c):
     state = False
     skip_next = False
@@ -183,8 +182,6 @@ def check_for_sillable(c):
     if cant_seperate(c):
         state = False
 
-    is_english(c)
-
 
     if c[1] == "y" and c[2] == "t" and c[3] == "e":
         state = False
@@ -205,7 +202,7 @@ def doSeperation(text):
         if text[j] in " ?.,:!" or text[j] == "":
             word = text[word_start_i: j]
             if not word in " ?.,:!":
-                text = text.replace(word, check_for_comp(word))
+                text = text.replace(word, force_seperate(word))
                 word_start_i = j
 
     while i < len(text) - 4:
