@@ -1,7 +1,5 @@
-from SCons.Tool.MSCommon.vc import component_id
 from german_compound_splitter import comp_split
 from loguru import logger
-from trimesh.bounds import contains
 import pandas as pd
 
 dict = comp_split.read_dictionary_from_file( './dicts/german.dic')

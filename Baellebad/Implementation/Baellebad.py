@@ -57,19 +57,18 @@ def getData(file):
 
 		maxBalls = 0
 		maxHour = 0
+		maxDay = ""
 		graphDict = {}
 		# calculate maximum usage
-		for day in days.values():
+		for dayKey, day in days.items():  # Use .items() to get both key and value
 			if len(day.values()) > 0:
-				print(day.values())
 				maxValue = max(day.values())
-				print(maxValue)
 				if maxValue > maxBalls:
 					maxBalls = maxValue
-					maxHour = max(day, key=day.get)
+					maxHour = max(day, key=day.get)  # gets the hour corresponding to max value
+					maxDay = dayKey  # stores the day name
 
 		for day, hours in days.items():
 			for hour, value in hours.items():
 				graphDict[f"{day[0] + day[1]} {hour}"] = value
-		print(graphDict)
-		return maxValue, maxHour, graphDict
+		return maxValue, maxHour, maxDay, graphDict

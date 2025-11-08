@@ -1,16 +1,8 @@
-import pyqtgraph as pg
-import numpy as np
 import os
-import sys
-from pyqtgraph.Qt import QtCore, QtGui
 import Baellebad  as b
 import pyqtgraph as pg
-import numpy as np
-from PyQt6 import QtWidgets
-import pyqtgraph.exporters
 from PyQt6.QtWidgets import QLabel
 from PyQt6.QtWidgets import *
-import argparse
 import sys
 
 files = os.listdir("data")
@@ -19,22 +11,18 @@ y = list()
 
 
 def getData(file):
-    maxValue, maxHour, timeStamps = b.getData(file)
+    maxValue, maxHour, maxDay, timeStamps = b.getData(file)
     x_labels = list(timeStamps.keys())
     x = list(range(len(x_labels)))
     y = list(timeStamps.values())
-    return maxValue, maxHour, x_labels, x,y
-
-maxValue, maxHour, x_labels, x,y = getData("ball00.txt")
-
-
+    return maxValue, maxHour,maxDay, x_labels, x,y
 
 
 class Window(QMainWindow):
     def FileClicked(self,item):
-        maxValue, maxHour,x_labels, x, y = getData(item.text())
+        maxValue, maxHour, maxDay, x_labels, x, y = getData(item.text())
         self.bargraph.setOpts(x = x, height = y)
-        self.resultText.setText("Die Schule braucht höchstens " + str(maxValue) + " Bälle um " + str(maxHour) + " Uhr!")
+        self.resultText.setText("Die Schule braucht höchstens " + str(maxValue) + " Bälle am " + maxDay + " um " + str(maxHour) + " Uhr!")
         self.plot.getAxis('bottom').setTicks([list(zip(x, x_labels))])
         self.plot.removeItem(self.bargraph)
         self.plot.addItem(self.bargraph)
@@ -58,7 +46,7 @@ class Window(QMainWindow):
 
         self.plot = pg.plot()
 
-        self.bargraph = pg.BarGraphItem(x = x, height = y, width = 0.6, brush ='g')
+        self.bargraph = pg.BarGraphItem(x = x, height = y, width = 0.6, brush ='b')
         self.plot.addItem(self.bargraph)
         layout = QGridLayout()
         widget.setLayout(layout)
