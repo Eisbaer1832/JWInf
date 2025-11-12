@@ -1,7 +1,0 @@
-\babel@toc {ngerman}{}\relax 
-\contentsline {section}{\numberline {1}Lösungsidee}{1}{}%
-\contentsline {section}{\numberline {2}Umsetzung}{1}{}%
-\contentsline {section}{\numberline {3}Werkzeuge}{1}{}%
-\contentsline {section}{\numberline {4}Beispiele}{2}{}%
-\contentsline {section}{\numberline {5}Quellcode}{2}{}%
-\providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

@@ -4,7 +4,7 @@ import pyqtgraph as pg
 from PyQt6.QtWidgets import QLabel
 from PyQt6.QtWidgets import *
 import sys
-
+from pyqtgraph.exporters import ImageExporter
 files = os.listdir("data")
 x = list()
 y = list()
@@ -26,6 +26,21 @@ class Window(QMainWindow):
         self.plot.getAxis('bottom').setTicks([list(zip(x, x_labels))])
         self.plot.removeItem(self.bargraph)
         self.plot.addItem(self.bargraph)
+        self.plot.setBackground('w')  # white background
+        self.plot.getAxis('left').setTextPen('k')  # black y-axis labels
+        self.plot.getAxis('bottom').setTextPen('k')  # black x-axis labels
+        self.plot.getAxis('left').setPen('k')  # black axis line
+        self.plot.getAxis('bottom').setPen('k')
+        #---AUTO EXPORT---
+        export_dir = "exports"
+        os.makedirs(export_dir, exist_ok=True)
+
+        filename = os.path.splitext(item.text())[0] + ".png"
+        export_path = os.path.join(export_dir, filename)
+
+        exporter = ImageExporter(self.plot.plotItem)
+        exporter.parameters()['width'] = 800  # adjust image resolution if you like
+        exporter.export(export_path)
 
     def __init__(self):
         super().__init__()

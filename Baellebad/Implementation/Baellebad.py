@@ -1,6 +1,3 @@
-import operator
-
-
 class Unterricht:
 	def __init__(self, Class, Day, Start, End, BallsNeeded):
 		self.Class = Class
@@ -59,8 +56,9 @@ def getData(file):
 		maxHour = 0
 		maxDay = ""
 		graphDict = {}
+
 		# calculate maximum usage
-		for dayKey, day in days.items():  # Use .items() to get both key and value
+		for dayKey, day in days.items():
 			if len(day.values()) > 0:
 				maxValue = max(day.values())
 				if maxValue > maxBalls:
