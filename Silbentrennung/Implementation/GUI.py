@@ -9,7 +9,7 @@ import argparse
 import sys
 import Silbentrennung as s
 
-files = os.listdir("./data")
+files = os.listdir("data")
 x = list()
 y = list()
 

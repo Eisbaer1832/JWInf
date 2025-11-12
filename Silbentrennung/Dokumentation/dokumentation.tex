@@ -1,0 +1,138 @@
+\documentclass[a4paper,10pt,ngerman]{scrartcl}
+\usepackage{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8x]{inputenc}
+\usepackage[a4paper,margin=2.5cm,footskip=0.5cm]{geometry}
+
+% Die nächsten vier Felder bitte anpassen:
+\newcommand{\Aufgabe}{Aufgabe 2: Silbentrennung} % Aufgabennummer und Aufgabennamen angeben
+\newcommand{\TeamId}{00015}                       % Team-ID aus dem PMS angeben
+\newcommand{\TeamName}{TGG-Abi26}                 % Team-Namen angeben
+\newcommand{\Namen}{Jannes Lehmann, Tino Brinker}           % Namen der Bearbeiter/-innen dieser Aufgabe angeben
+\usepackage{float}
+% Kopf- und Fußzeilen
+\usepackage{scrlayer-scrpage, lastpage}
+\setkomafont{pageheadfoot}{\large\textrm}
+\lohead{\Aufgabe}
+\rohead{Team-ID: \TeamId}
+\cfoot*{\thepage{}/\pageref{LastPage}}
+
+% Position des Titels
+\usepackage{titling}
+\setlength{\droptitle}{-1.0cm}
+
+% Für mathematische Befehle und Symbole
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Für Bilder
+\usepackage{graphicx}
+
+% Für Algorithmen
+\usepackage{algpseudocode}
+
+% Für Quelltext
+\usepackage{listings}
+\usepackage{color}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstset{
+	keywordstyle=\color{blue},commentstyle=\color{mygreen},
+	stringstyle=\color{mymauve},rulecolor=\color{black},
+	basicstyle=\footnotesize\ttfamily,numberstyle=\tiny\color{mygray},
+	captionpos=b, % sets the caption-position to bottom
+	keepspaces=true, % keeps spaces in text
+	numbers=left, numbersep=5pt, showspaces=false,showstringspaces=true,
+	showtabs=false, stepnumber=2, tabsize=2, title=\lstname
+}
+
+
+% Diese beiden Pakete müssen zuletzt geladen werden
+%\usepackage{hyperref} % Anklickbare Links im Dokument
+\usepackage{cleveref}
+
+% Daten für die Titelseite
+\title{\textbf{\Huge\Aufgabe}}
+\author{\LARGE Team-ID: \LARGE \TeamId \\\\
+\LARGE Team-Name: \LARGE \TeamName \\\\
+\LARGE Bearbeiter/-innen dieser Aufgabe: \\
+\LARGE \Namen\\\\}
+\date{\LARGE\today}
+
+\begin{document}
+
+	\maketitle
+	\tableofcontents
+
+	\vspace{0.5cm}
+	\newpage
+
+	\section{Lösungsidee}
+		In der deutschen Sprache werden Silben anhand von zahlreichen Regeln getrennt.
+		Für die Implementation dieser ist in der Regel höchstens ein Kontetfenster von 6 Zeichennötig.
+		Manche Regel bedingen einander und werden daher hierarchisch behandelt.
+		Andere Regeln stehen für sich alleine und werden immer angewandt.
+
+	\section{Umsetzung}
+		Die Lösung dieser Aufgabe wurde in drei separate Modulen interpretiert.
+		\begin{enumerate}
+			\item Silbentrennung.py zur Trennung der Silben
+			\item GUI.py dient als praktische Anwendung unseres Algorithmus. Hier können eigene Texte eingegeben und getrennt werden.
+			\item AutomaticTesting.py dient als Test des Algorithmus. Verschiedene Fälle werden durchgeführt und mit einem Ziel Wert verglichen.
+		\end{enumerate}
+
+		Im ersten Durchgang des Algorithmusses wird durch den Text iteriert und jeweils ein ganzes Wort in \lstinline|force_seperate(compound)| übergeben.
+		Zuerst werden verschiedene Regeln, wie die Trennung vor einem "sch" angewand.
+		\begin{lstlisting}[language=Python, caption={Trennung vor 'sch'},label={lst:code2}]
+			schIndex = pass_compound.rfind("sch")
+			if schIndex >= 1:
+				schIndex = schIndex + 3
+				if isConsonant(pass_compound[schIndex]):
+					pass_compound = pass_compound[0:schIndex]
+										+ " "
+										+ pass_compound[schIndex: len(pass_compound)]
+					result = " " + pass_compound
+		\end{lstlisting}
+
+		Daraufhin wird die Library german\_compound\_splitter verwendet und durch um zusammengesetzte Wörter in ihre Bestandteile zu trennen. \newline
+		Sobald die erste Loop den Text bearbeitet hat, wird dieser noch ein zweites mal durch die Methode check\_for\_sillable(c), angepasst.
+		In dieser Spiegelt c[1], das Zeichen nach dem eine Leertaste eingefügt werden soll. \newline
+
+		Bsp für eine Regel:
+		\begin{lstlisting}[language=Python, caption={Trennung nach einem Vokal, sollten keine 2 Konsonanten folgen},label={lst:code3}]
+    		if isConsonant(c[1]) == False and ((isConsonant(c[2]) == False and isConsonant(c[3]))
+				or (isConsonant(c[2]) and isConsonant(c[3]) == False)):
+				state = True
+		\end{lstlisting}
+		Das setzen von "state" auf true sorgt jedoch nicht zwigend für die Trennung einer Silbe.
+		Sollte eine Regel mit höherer Priorität, bzw. späterer Position im Code diese Variable auf False setzen, kommt es nicht zur Trennung.
+
+
+	\section{Werkzeuge}
+		Für das Programm wurden folgende drittanbieter Libraries verwendet:
+		\begin{enumerate}
+			\item PyQt6
+			\item pyqtgraph
+			\item german\_compound\_splitter
+		\end{enumerate}
+		Es wurden keine weiteren Hilfsmittel verwendet.
+
+	\newpage
+	\section{Beispiele}
+
+
+	\newpage
+	\section{Quellcode}
+	\subsection{Algorithmus}
+		\begin{lstlisting}[language=Python,label={lst:code4}]
+
+		\end{lstlisting}
+
+	\subsection{GUI}
+		\begin{lstlisting}[language=Python,label={lst:code4}]
+
+
+		\end{lstlisting}
+
+\end{document}

@@ -5,8 +5,8 @@ import Silbentrennung as S
 from loguru import logger
 
 
-files = os.listdir("./data/tasks")
-logger.add("./logs/automatic_testing_{time}.log", rotation="1 MB")
+files = os.listdir("data/tasks")
+logger.add("logs/automatic_testing_{time}.log", rotation="1 MB")
 
 class Type:
     Task = "tasks"

@@ -101,7 +101,7 @@ def cant_seperate(c):
 
 
 # Diese Methode trennt basierend auf einem hierarchischem System
-def check_for_sillable(c):
+def check_for_sillable(minus1, c):
     state = False
     skip_next = False
 
@@ -187,7 +187,8 @@ def check_for_sillable(c):
     if c[0] == "g" and c[1] == "e" and c[2] == "t":
         state = True
 
-
+    if isConsonant(c[0]) and isConsonant(c[1]) and isConsonant(c[2]) and not cant_seperate(c) and c[1] != c[2] and isFirstOrLastChar(minus1):
+        state = False
 
     return state, skip_next
 
@@ -197,14 +198,14 @@ def doSeperation(text):
 
     word_start_i = 0
     for j in range(len(text)):
-        if text[j] in " ?.,:!" or text[j] == "":
+        if text[j] in " ?.:!" or text[j] == "":
             word = text[word_start_i: j]
-            if not word in " ?.,:!":
+            if not word in " ?.:!":
                 text = text.replace(word, force_seperate(word))
                 word_start_i = j
 
     while i < len(text) - 4:
-        (state,skipNext) = check_for_sillable(text[i - 1] + text[i] + text[i + 1] + text[i + 2] + text[i + 3]+ text[i + 4])
+        (state,skipNext) = check_for_sillable(text[i - 2], text[i - 1] + text[i] + text[i + 1] + text[i + 2] + text[i + 3]+ text[i + 4])
         if state: 
             text = text[:i+1] + " " + text[i+1:] # Silbentrennung einfügen
             if (skipNext):
